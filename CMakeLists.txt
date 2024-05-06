@@ -14,6 +14,7 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/external/googletest)
 
 add_subdirectory(day1)
 add_subdirectory(day2)
+add_subdirectory(day3)
 
 add_executable(
     tests
