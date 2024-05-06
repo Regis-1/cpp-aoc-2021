@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iterator>
 #include <iostream>
+#include <numeric>
 
 std::vector<int> extractInputValues(const std::string fileName) {
     std::ifstream fd(fileName);
@@ -23,16 +24,25 @@ std::vector<int> extractInputValues(const std::string fileName) {
     return inputValues;
 }
 
-int countIncreases(const std::vector<int>& values) {
+int countIncreases(const std::vector<int>& values, unsigned int windowSize = 1) {
+    if (values.size() == 0 || windowSize >= values.size())
+        return 0;
+
+    if (windowSize == 0)
+        throw std::invalid_argument("Sliding window size cannot be less or equal to 0.");
+
     int totalCount {0};
     auto begIter {std::begin(values)};
+    auto winEndIter {std::begin(values) + windowSize};
     auto endIter {std::end(values)};
 
-    int prevValue {*begIter};
-    for (auto it {++begIter}; it != endIter; ++it) {
-        if (*it > prevValue)
+    int prevValue {std::accumulate(begIter, winEndIter, 0)};
+    for (auto it {++begIter}; winEndIter != endIter; ++it) {
+        ++winEndIter;
+        int currValue = std::accumulate(it, winEndIter, 0);
+        if (currValue > prevValue)
             ++totalCount;
-        prevValue = *it;
+        prevValue = currValue;
     }
 
     return totalCount;
