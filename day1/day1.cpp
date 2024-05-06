@@ -10,7 +10,7 @@ int main(int argc, char* argv[]) {
 
     int slidingWindowCount {countIncreases(inputValues, 3)};
     std::cout
-        << "The answer for the Day1 (part one) is: " << slidingWindowCount << "."
+        << "The answer for the Day1 (part two) is: " << slidingWindowCount << "."
         << std::endl;
 
     return 0;

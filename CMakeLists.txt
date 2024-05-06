@@ -13,6 +13,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/googletest)
 
 add_subdirectory(day1)
+add_subdirectory(day2)
 
 add_executable(
     tests
