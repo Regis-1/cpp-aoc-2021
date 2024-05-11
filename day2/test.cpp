@@ -56,3 +56,8 @@ TEST(Day2_Task, AimedSubmarine_AoCCourse) {
     EXPECT_EQ(wantPosition, gotPosition);
     EXPECT_EQ(wantDepth, gotDepth);
 }
+
+int main (int argc, char *argv[]) {
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}

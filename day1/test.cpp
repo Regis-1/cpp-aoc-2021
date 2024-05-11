@@ -55,3 +55,8 @@ TEST(Day1_Task, SlidingWindowCount_AoCExample) {
 
     EXPECT_EQ(wantCount, gotCount);
 }
+
+int main (int argc, char *argv[]) {
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}

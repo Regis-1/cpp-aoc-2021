@@ -1,16 +1,11 @@
 #pragma once
 
-#include <fstream>
+#include <vector>
+#include <string>
 
-std::vector<std::vector<char>> extractInputData(const std::string filePath) {
-    std::ifstream fd(filePath);
-    if (!fd)
-        throw std::system_error(std::error_code(), "Invalid file or file path.");
+using DiagData = std::vector<std::vector<char>>;
 
-    std::vector<std::vector<char>> result;
-    std::string line;
-
-    fd.close();
-
-    return result;
-}
+DiagData extractInputData(const std::string);
+std::string getGammaRateFromData(DiagData&);
+std::string getEpsilonRateFromGamma(const std::string&);
+const int binToDec(const std::string);

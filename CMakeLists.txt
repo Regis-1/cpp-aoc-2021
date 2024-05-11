@@ -10,18 +10,11 @@ project (
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS TRUE)
 
+option(BUILD_GMOCK OFF)
+option(INSTALL_GTEST OFF)
+
 add_subdirectory(${CMAKE_SOURCE_DIR}/external/googletest)
 
 add_subdirectory(day1)
 add_subdirectory(day2)
 add_subdirectory(day3)
-
-add_executable(
-    tests
-    ${CMAKE_SOURCE_DIR}/test.cpp
-)
-
-target_link_libraries(
-    tests
-    PRIVATE gtest
-)
