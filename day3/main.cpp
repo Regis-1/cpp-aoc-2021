@@ -12,6 +12,13 @@ int main (int argc, char *argv[]) {
         << "The answer for the Day3 (part one) is: "
         << binToDec(gammaRateBin) * binToDec(epsilonRateBin)
         << std::endl;
+
+    const std::string O2Rating {getAdvancedRating(data, true)};
+    const std::string CO2Rating {getAdvancedRating(data, false)};
+    std::cout
+        << "The answer for the Day3 (part two) is: "
+        << binToDec(O2Rating) * binToDec(CO2Rating)
+        << std::endl;
     
     return 0;
 }

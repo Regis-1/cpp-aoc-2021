@@ -5,7 +5,8 @@
 
 using DiagData = std::vector<std::vector<char>>;
 
-DiagData extractInputData(const std::string);
-std::string getGammaRateFromData(DiagData&);
-std::string getEpsilonRateFromGamma(const std::string&);
+const DiagData extractInputData(const std::string);
+const std::string getGammaRateFromData(const DiagData&);
+const std::string getEpsilonRateFromGamma(const std::string&);
 const int binToDec(const std::string);
+const std::string getAdvancedRating(const DiagData&, const bool = false);
