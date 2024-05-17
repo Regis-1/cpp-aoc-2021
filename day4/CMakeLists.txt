@@ -1,6 +1,7 @@
 add_library(
     libDay4 STATIC
     ${CMAKE_CURRENT_LIST_DIR}/day4.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/BingoCard.cpp
 )
 
 target_include_directories(
