@@ -3,22 +3,12 @@
 #include "day4.hpp"
 #include "BingoCard.hpp"
 
-TEST(Day4PartOne, ExtractNumbersBySeparator1) {
-    const auto input {"12;15;-3;38"};
-    const std::vector<int> want {12, 15, -3, 38};
+TEST(Day4PartOne, ShouldThrowWhenInvalidIdx) {
+    BingoCard bc{BingoNumbers{}};
 
-    const auto got {utils::extractNumbersBySeparator(input, ';')};
-
-    EXPECT_EQ(want, got);
-}
-
-TEST(Day4PartOne, ExtractNumbersBySeparator2) {
-    const auto input {"12,-15,3"};
-    const std::vector<int> want {12, -15, 3};
-
-    const auto got {utils::extractNumbersBySeparator(input, ',')};
-
-    EXPECT_EQ(want, got);
+    EXPECT_THROW(bc.getNum(18, 5), std::out_of_range);
+    EXPECT_THROW(bc.checkNum(10, 5), std::out_of_range);
+    EXPECT_THROW(bc.markNum(8, 9, true), std::out_of_range);
 }
 
 TEST(Day4PartOne, CreateBingoCardFromArray) {
@@ -30,7 +20,7 @@ TEST(Day4PartOne, CreateBingoCardFromArray) {
     EXPECT_EQ(19, bc.getNum(3,3));
 }
 
-TEST(Day4PartOne, CreateBingoCardFromString) {
+TEST(Day4PartOne, CreateBingoCardFromString1) {
     const std::string input {R"(
 1 2 3 4 5
 6 7 8 9 10
@@ -43,6 +33,21 @@ TEST(Day4PartOne, CreateBingoCardFromString) {
     EXPECT_EQ(2, bc.getNum(0,1));
     EXPECT_EQ(9, bc.getNum(1,3));
     EXPECT_EQ(19, bc.getNum(3,3));
+}
+
+TEST(Day4PartOne, CreateBingoCardFromString2) {
+    const std::string input {R"(
+11 12 13 14 15
+16 17 18 19 110
+111 112 113 114 115
+116 117 118 119 120
+121 122 123 124 125)"};
+
+    const BingoCard bc {input};
+
+    EXPECT_EQ(12, bc.getNum(0,1));
+    EXPECT_EQ(19, bc.getNum(1,3));
+    EXPECT_EQ(119, bc.getNum(3,3));
 }
 
 int main (int argc, char *argv[]) {
