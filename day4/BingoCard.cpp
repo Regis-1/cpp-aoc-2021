@@ -1,6 +1,7 @@
 #include "BingoCard.hpp"
+#include <algorithm>
+#include <iterator>
 #include <sstream>
-#include <iostream>
 
 BingoCard::BingoCard(const BingoNumbers& initNums) : numbers(std::move(initNums)) {
 }
@@ -29,11 +30,28 @@ const bool BingoCard::checkNum(const int& row, const int& col) const {
     return marks[row * 5 + col];
 }
 
-void BingoCard::markNum(const int& row, const int& col, const bool& value) {
+const bool BingoCard::checkNum(const int& numToBeChecked) const {
+    return marks[findNum(numToBeChecked)];
+}
+
+void BingoCard::setMark(const int& row, const int& col, const bool& value) {
     auto idx {row * 5 + col};
     if (idx >= marks.size()) throw std::out_of_range("Invalid idx for number");
 
     marks[row * 5 + col] = value;
+}
+
+void BingoCard::markNum(const int& numToBeMarked) {
+    marks[findNum(numToBeMarked)] = true;
+}
+
+const int BingoCard::findNum(const int& numToBeFound) const {
+    const auto findResult {std::find(std::begin(numbers), std::end(numbers), numToBeFound)};
+
+    if (findResult == std::end(numbers))
+        throw std::logic_error("Searched number is not on the BingoCard!");
+
+    return std::distance(std::begin(numbers), findResult);
 }
 
 const bool operator==(const BingoCard& lhs, const BingoCard& rhs) {

@@ -15,9 +15,13 @@ public:
 
     const int getNum(const int&, const int&) const;
     const bool checkNum(const int&, const int&) const;
-    void markNum(const int&, const int&, const bool&);
+    const bool checkNum(const int&) const;
+    void setMark(const int&, const int&, const bool&);
+    void markNum(const int&);
 
 private:
+    const int findNum(const int&) const;
+
     BingoNumbers numbers{};
     BingoMarks marks{};
 };
