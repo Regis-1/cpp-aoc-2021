@@ -10,5 +10,5 @@ using BingoSubsysOutput = std::pair<const std::vector<int>, std::vector<BingoCar
 
 namespace utils {
     const std::vector<int> extractNumbersBySeparator(const std::string&, const char&);
-    BingoSubsysOutput extractBingoOrderAndCards(const std::string& filePath);
+    BingoSubsysOutput getBingoAll(const std::string&, const bool&);
 }

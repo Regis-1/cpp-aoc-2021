@@ -13,6 +13,7 @@ BingoCard::BingoCard(const std::string& input) {
     for (iss >> num; !iss.fail(); iss >> num) {
         numbers[idx] = num;
         ++idx;
+        if (idx == BINGO_CARD_SIZE) break;
     }
 }
 

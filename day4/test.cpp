@@ -88,6 +88,34 @@ TEST(Day4BingoCard, FindAndMarkGivenNumber) {
     EXPECT_TRUE(bc.checkNum(numToBeMarked));
 }
 
+TEST(Day4ExtractInput, SimpleInput) {
+    const std::string input {R"(23,11,17,8,9,10
+
+1 2 3 4 5
+6 7 8 9 10
+11 12 13 14 15
+16 17 18 19 20
+21 22 23 24 25
+
+11 12 13 14 15
+16 17 18 19 110
+111 112 113 114 115
+116 117 118 119 120
+121 122 123 124 125)"};
+    BingoSubsysOutput got {utils::getBingoAll(input, false)}; 
+
+    EXPECT_EQ(6, got.first.size());
+    EXPECT_EQ(2, got.second.size());
+}
+
+TEST(Day4ExtractInput, AoCTestInput) {
+    const std::string input {"../data/day4/input_test.txt"};
+    BingoSubsysOutput got {utils::getBingoAll(input, true)}; 
+
+    EXPECT_EQ(27, got.first.size());
+    EXPECT_EQ(3, got.second.size());
+}
+
 int main (int argc, char *argv[]) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

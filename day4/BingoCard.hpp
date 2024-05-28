@@ -3,8 +3,12 @@
 #include <string>
 #include <array>
 
-using BingoNumbers = std::array<int, 25>;
-using BingoMarks = std::array<bool, 25>;
+namespace {
+    const int BINGO_CARD_SIZE = 25;
+}
+
+using BingoNumbers = std::array<int, BINGO_CARD_SIZE>;
+using BingoMarks = std::array<bool, BINGO_CARD_SIZE>;
 
 class BingoCard {
 public:
