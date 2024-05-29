@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+#include <unordered_map>
 
 #include "BingoCard.hpp"
 
@@ -56,5 +57,39 @@ BingoSubsysOutput getBingoAll(const std::string& input, const bool& isFilePath) 
         std::istringstream iss(input);
         return extractInput(iss);
     }
+}
+
+const int evaluateGame(BingoSubsysOutput &bso, const bool& lastCardWin) {
+    std::unordered_map<int, int> cardScores;
+    int lastWon;
+    int cardCounter {0};
+    for (auto n : bso.first) {
+        for (auto& bc : bso.second) {
+            if (auto search {cardScores.find(cardCounter)}; search != std::end(cardScores)) {
+                ++cardCounter;
+                continue;
+            }
+            try {
+                bc.markNum(n);
+                if (bc.checkWin()) {
+                    if (!lastCardWin) {
+                        return bc.checkScore(n);
+                    }
+                    else {
+                        cardScores[cardCounter] = bc.checkScore(n);
+                        lastWon = cardCounter;
+                    }
+                }
+
+            } catch (const std::exception& e) {}
+            ++cardCounter;
+        }
+        cardCounter = 0;
+    }
+
+    if (lastCardWin)
+        return cardScores[lastWon];
+
+    return -1;
 }
 }

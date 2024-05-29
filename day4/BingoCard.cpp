@@ -55,6 +55,32 @@ const int BingoCard::findNum(const int& numToBeFound) const {
     return std::distance(std::begin(numbers), findResult);
 }
 
+const bool BingoCard::checkWin() {
+    std::array<int, 10> sums{0};
+    for (auto i {0}; i < 5; ++i)
+        for (auto j {0}; j < 5; ++j)
+            if (checkNum(j, i)) {
+                sums[i]++;
+                sums[j+5]++;
+            }
+
+    for (auto s : sums)
+        if (s == 5)
+            return true;
+
+    return false;
+}
+
+const int BingoCard::checkScore(const int& lastNum) {
+    int sum {0};
+    for (auto i {0}; i < 5; ++i)
+        for (auto j {0}; j < 5; ++j) 
+            if (!checkNum(j, i))
+                sum += getNum(j, i);
+
+    return sum*lastNum;
+}
+
 const bool operator==(const BingoCard& lhs, const BingoCard& rhs) {
     return false;
 }

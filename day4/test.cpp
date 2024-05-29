@@ -88,6 +88,40 @@ TEST(Day4BingoCard, FindAndMarkGivenNumber) {
     EXPECT_TRUE(bc.checkNum(numToBeMarked));
 }
 
+TEST(Day4BingoCard, CheckWinShouldFalse) {
+    BingoCard bc {BingoNumbers{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+        15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25}};
+
+    EXPECT_FALSE(bc.checkWin());
+}
+
+TEST(Day4BingoCard, CheckWinShouldTrue) {
+    BingoCard bc {BingoNumbers{14, 21, 17, 24, 4, 10, 16, 15, 9, 19, 18, 8, 23,
+        26, 20, 22, 11, 13, 6, 5, 2, 0, 12, 3, 7}};
+
+    bc.markNum(14); bc.markNum(21); bc.markNum(17);
+    bc.markNum(4); bc.markNum(9); bc.markNum(23);
+    bc.markNum(11); bc.markNum(5); bc.markNum(2);
+    bc.markNum(0); bc.markNum(7);
+    bc.markNum(24);
+
+    EXPECT_TRUE(bc.checkWin());
+}
+
+TEST(Day4BingoCard, EvaluateWinScore) {
+    BingoCard bc {BingoNumbers{14, 21, 17, 24, 4, 10, 16, 15, 9, 19, 18, 8, 23,
+        26, 20, 22, 11, 13, 6, 5, 2, 0, 12, 3, 7}};
+    const int want {4512};
+
+    bc.markNum(14); bc.markNum(21); bc.markNum(17);
+    bc.markNum(4); bc.markNum(9); bc.markNum(23);
+    bc.markNum(11); bc.markNum(5); bc.markNum(2);
+    bc.markNum(0); bc.markNum(7);
+    bc.markNum(24);
+
+    EXPECT_EQ(want, bc.checkScore(24));
+}
+
 TEST(Day4ExtractInput, SimpleInput) {
     const std::string input {R"(23,11,17,8,9,10
 
@@ -114,6 +148,24 @@ TEST(Day4ExtractInput, AoCTestInput) {
 
     EXPECT_EQ(27, got.first.size());
     EXPECT_EQ(3, got.second.size());
+}
+
+TEST(Day4TestScenario, EvaluateGame) {
+    const std::string input {"../data/day4/input_test.txt"};
+    BingoSubsysOutput bso {utils::getBingoAll(input, true)}; 
+    const int want {4512};
+
+    const auto got {utils::evaluateGame(bso)};
+    EXPECT_EQ(want, got);
+}
+
+TEST(Day4TestScenario, EvaluateGameDayTwo) {
+    const std::string input {"../data/day4/input_test.txt"};
+    BingoSubsysOutput bso {utils::getBingoAll(input, true)}; 
+    const int want {1924};
+
+    const auto got {utils::evaluateGame(bso, true)};
+    EXPECT_EQ(want, got);
 }
 
 int main (int argc, char *argv[]) {
