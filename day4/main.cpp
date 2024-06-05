@@ -6,12 +6,12 @@ int main (int argc, char *argv[]) {
     BingoSubsysOutput bso {utils::getBingoAll(filePath, true)}; 
 
     std::cout
-        << "The answers for the Day4 (part one) is: "
+        << "The answer for the Day4 (part one) is: "
         << utils::evaluateGame(bso)
         << std::endl;
 
     std::cout
-        << "The answers for the Day4 (part two) is: "
+        << "The answer for the Day4 (part two) is: "
         << utils::evaluateGame(bso, true)
         << std::endl;
 

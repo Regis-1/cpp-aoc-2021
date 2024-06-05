@@ -11,4 +11,5 @@ namespace day5 {
 const std::vector<VentRange> loadInputFromFile(const std::string& filePath);
 const std::pair<int, int> getRangesMax(const std::vector<VentRange>& ranges);
 const std::vector<int> createVentDiagram(const std::vector<VentRange>& ranges);
+const int countOverlapPoints(const std::vector<int>& completeVentDiagram);
 }

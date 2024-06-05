@@ -41,14 +41,17 @@ TEST(InputProcessing, LoadInputFromFileLoadAocTest) {
 }
 
 TEST(Extra, GetDimensionsMax) {
-    const std::string testFilePath {"../data/day5/input_test.txt"};
-    const auto want {std::make_pair(9, 9)};
+    const auto want {std::make_pair(10, 10)};
 
     EXPECT_EQ(want, day5::getRangesMax(AocTestRanges));
 }
 
 TEST(Diagram, CreateCompleteVentDiagram) {
     EXPECT_EQ(AocCompleteVentDiagram, day5::createVentDiagram(AocTestRanges));
+}
+
+TEST(Diagram, GetScoreOfAocTestDiagram) {
+    EXPECT_EQ(5, day5::countOverlapPoints(AocCompleteVentDiagram));
 }
 
 int main (int argc, char *argv[]) {
