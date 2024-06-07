@@ -26,6 +26,18 @@ const std::vector<int> AocCompleteVentDiagram {
     0,0,0,0,0,0,0,0,0,0,
     0,0,0,0,0,0,0,0,0,0,
     2,2,2,1,1,1,0,0,0,0};
+
+const std::vector<int> AocCompleteVentDiagramDiagonals {
+    1,0,1,0,0,0,0,1,1,0,
+    0,1,1,1,0,0,0,2,0,0,
+    0,0,2,0,1,0,1,1,1,0,
+    0,0,0,1,0,2,0,2,0,0,
+    0,1,1,2,3,1,3,2,1,1,
+    0,0,0,1,0,2,0,0,0,0,
+    0,0,1,0,0,0,1,0,0,0,
+    0,1,0,0,0,0,0,1,0,0,
+    1,0,0,0,0,0,0,0,1,0,
+    2,2,2,1,1,1,0,0,0,0};
 }
 
 TEST(InputProcessing, LoadInputFromFileShouldThrowIfInvalidFile) {
@@ -46,12 +58,20 @@ TEST(Extra, GetDimensionsMax) {
     EXPECT_EQ(want, day5::getRangesMax(AocTestRanges));
 }
 
-TEST(Diagram, CreateCompleteVentDiagram) {
-    EXPECT_EQ(AocCompleteVentDiagram, day5::createVentDiagram(AocTestRanges));
+TEST(Diagram, CreateCompleteVentDiagramHV) {
+    EXPECT_EQ(AocCompleteVentDiagram, day5::createVentDiagram(AocTestRanges, day5::getCoordsHVOnly));
 }
 
-TEST(Diagram, GetScoreOfAocTestDiagram) {
+TEST(Diagram, CreateCompleteVentDiagramDiagonals) {
+    EXPECT_EQ(AocCompleteVentDiagramDiagonals, day5::createVentDiagram(AocTestRanges, day5::getCoordsDiagonals));
+}
+
+TEST(Diagram, GetScoreOfAocTestDiagramHV) {
     EXPECT_EQ(5, day5::countOverlapPoints(AocCompleteVentDiagram));
+}
+
+TEST(Diagram, GetScoreOfAocTestDiagramDiagonals) {
+    EXPECT_EQ(12, day5::countOverlapPoints(AocCompleteVentDiagramDiagonals));
 }
 
 int main (int argc, char *argv[]) {
