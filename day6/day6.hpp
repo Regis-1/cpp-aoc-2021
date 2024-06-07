@@ -2,9 +2,10 @@
 
 #include <vector>
 #include <string>
+#include <map>
 
 namespace day6 {
-    using Lanterfishes = std::vector<int>;
+    using Lanterfish = std::map<int, long>;
 }
 
 namespace {
@@ -12,7 +13,9 @@ const std::vector<int> extractNumbersBySeparator(const std::string& input, const
 }
 
 namespace day6 {
-const Lanterfishes extractDataFromFile(const std::string& path);
-void processOneDay(Lanterfishes& fishes);
-void processNDays(Lanterfishes& fishes, const unsigned int ndays);
+const std::vector<int> extractDataFromFile(const std::string& path);
+const Lanterfish groupFish(const std::vector<int> fish);
+void processOneDay(Lanterfish& fish);
+void processNDays(Lanterfish& fish, const unsigned int ndays);
+const unsigned long countFish(const Lanterfish& fish);
 }

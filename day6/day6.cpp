@@ -5,6 +5,7 @@
 #include <fstream>
 
 namespace {
+const int numOfCycleDays {8};
 const std::vector<int> extractNumbersBySeparator(const std::string& input, const char& sep) {
     std::istringstream iss(input);
     std::vector<int> result;
@@ -23,7 +24,7 @@ const std::vector<int> extractNumbersBySeparator(const std::string& input, const
 }
 
 namespace day6 {
-const Lanterfishes extractDataFromFile(const std::string& path) {
+const std::vector<int> extractDataFromFile(const std::string& path) {
     std::ifstream fd{path};
     if (fd.bad())
         throw std::runtime_error{
@@ -35,21 +36,48 @@ const Lanterfishes extractDataFromFile(const std::string& path) {
     return extractNumbersBySeparator(line, ',');
 }
 
-void processOneDay(Lanterfishes& fishes) {
-    int additionalFishes {0};
-    for (auto& f : fishes) {
-        if (--f < 0) {
-            ++additionalFishes;
-            f = 6;
+const Lanterfish groupFish(const std::vector<int> fish) {
+    Lanterfish lf;
+    for (auto i{0}; i <= numOfCycleDays; ++i)
+        lf[i] = 0;
+
+    for (const auto f : fish) {
+        if (auto found {lf.find(f)}; found != lf.end()) {
+            lf[f] += 1;
         }
     }
 
-    for (int i {0}; i < additionalFishes; ++i)
-        fishes.push_back(8);
+    return lf;
 }
 
-void processNDays(Lanterfishes &fishes, const unsigned int ndays) {
+void processOneDay(Lanterfish& fish) {
+    unsigned long newborn{0};
+    for (auto& [k, v] : fish) {
+        if (k == 0) {
+            newborn = fish[k];
+            v = fish[k+1];
+        }
+        else if (k == 6) {
+            v = fish[k+1] + newborn;
+        }
+        else if (k == 8) {
+            v = newborn;
+        }
+        else {
+            v = fish[k+1];
+        }
+    }
+}
+
+void processNDays(Lanterfish &fish, const unsigned int ndays) {
     for (auto i{0}; i < ndays; ++i)
-        processOneDay(fishes);
+        processOneDay(fish);
+}
+
+const unsigned long countFish(const Lanterfish &fish) {
+    unsigned long sum{0};
+    for (const auto [k, v] : fish)
+        sum += v;
+    return sum;
 }
 }
