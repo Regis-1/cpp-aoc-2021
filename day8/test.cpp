@@ -53,6 +53,11 @@ TEST(AnalyzingSignals, DecodingSignalValuesLine) {
     EXPECT_EQ(want, day8::decodeSignalLine(inputLine));
 }
 
+TEST(AnalyzingSignals, DecodingAllTestSignals) {
+    const std::vector<int> wantDecoded{8394 ,9781 ,1197 ,9361 ,4873 ,8418 ,4548 ,1625 ,8717 ,4315};
+    EXPECT_EQ(wantDecoded, day8::decodeSignals(testSignalsAndDigits));
+}
+
 int main (int argc, char *argv[]) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
