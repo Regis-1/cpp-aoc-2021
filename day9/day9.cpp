@@ -7,14 +7,26 @@
 #include <functional>
 #include <iostream>
 #include <iterator>
+#include <queue>
 
 namespace {
+using Coords = std::pair<size_t, size_t>;
+
 const day9::Heightmap convertFileHeightmapToNumeric(const std::string& fp);
+inline void hashCombine(std::size_t& seed, std::size_t value);
 }
 
 namespace day9 {
+
+std::size_t PairHasher::operator()(const std::pair<size_t, size_t>& p) const noexcept {
+    std::size_t seed = 0;
+    hashCombine(seed, p.first);
+    hashCombine(seed, p.second);
+    return seed;
+}
+
 HeightmapSystem::HeightmapSystem(const std::string &filepath)
-    : heightmap(convertFileHeightmapToNumeric(filepath))
+    : heightmap{convertFileHeightmapToNumeric(filepath)}
 {
     auto [w, h] = getHmDimensions();
     hmWidth = w;
@@ -23,6 +35,10 @@ HeightmapSystem::HeightmapSystem(const std::string &filepath)
 
 const Heightmap& HeightmapSystem::getHeightmap() const {
     return heightmap;
+}
+
+const BasinMap& HeightmapSystem::getBasinMap() const {
+    return basinMap;
 }
 
 const std::vector<short> HeightmapSystem::findLowPointsInLine(const size_t idx) const {
@@ -79,6 +95,21 @@ const std::vector<short> HeightmapSystem::calculateRiskLevels(const std::vector<
     return plusOneVec;
 }
 
+void HeightmapSystem::findBasins() {
+    std::queue<std::pair<size_t, size_t>> coordsQ;
+    for (auto row{0}; row < hmHeight; ++row) {
+        for (auto col{0}; col < hmWidth; ++col) {
+            // TODO: try adding filling basin separately from going coords by coords
+            const std::pair<size_t, size_t> coords{row, col};
+            try {
+                const size_t val{basinMap.at(coords)};
+            }
+            catch (const std::exception &e) {
+                coordsQ.push(coords);
+            }
+        }
+    }
+}
 
 const std::pair<size_t, size_t> HeightmapSystem::getHmDimensions() {
     return {heightmap[0].size(), heightmap.size()};
@@ -104,5 +135,9 @@ const day9::Heightmap convertFileHeightmapToNumeric(const std::string& fp) {
     }
 
     return result;
+}
+
+inline void hashCombine(std::size_t& seed, std::size_t value) {
+    seed ^= value + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 }
 }

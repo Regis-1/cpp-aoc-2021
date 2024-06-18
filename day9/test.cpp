@@ -4,9 +4,14 @@
 
 /*
  * Plan:
- *  - look by line index as parameter and return vector of low points
- *  - in a loop check all data line by line and merge all low points
- *  - add 1 to all of results and sum them up
+ *  - take a first point and check if it wasn't already checked
+ *  - if not run filler for all basin:
+ *      - check all directions you can move from that point, and check if they are not in queue
+ *      - if you can move to those directions add them to queue
+ *      - after that add current point to basins map and to other point from queue
+ *      - if queue is empty then the whole basin is filled and you can start searching for next basin
+ *  - after all basins are found return via another functions all basin sizes
+ *  - multiply those sizes by themselves to get the final score
  */
 
 namespace {
@@ -18,8 +23,12 @@ namespace {
         {9,8,9,9,9,6,5,6,7,8}
     };
 
-    struct LoadedTestHeightmapSystem : testing::Test {
+    struct LoadedConstTestHeightmapSystem : testing::Test {
         const day9::HeightmapSystem heightmapSystem{"../data/day9/input_test.txt"};
+    };
+
+    struct LoadedTestHeightmapSystem : testing::Test {
+        day9::HeightmapSystem heightmapSystem{"../data/day9/input_test.txt"};
     };
 }
 
@@ -30,20 +39,29 @@ TEST(HeightmapSystemClass, CreatingClassWithGivenHeightmapFile) {
     EXPECT_EQ(testHeightmap, heightmapSystem.getHeightmap());
 }
 
-TEST_F(LoadedTestHeightmapSystem, FindingLowPointsInTopLine) {
+TEST_F(LoadedConstTestHeightmapSystem, FindingLowPointsInTopLine) {
     const std::vector<short> wantLowPoints{1,0};
     EXPECT_EQ(wantLowPoints, heightmapSystem.findLowPointsInLine(0));
 }
 
-TEST_F(LoadedTestHeightmapSystem, FindingAllLowPointsInHeightmap) {
+TEST_F(LoadedConstTestHeightmapSystem, FindingAllLowPointsInHeightmap) {
     const std::vector<short> wantLowPoints{1, 0, 5, 5};
     EXPECT_EQ(wantLowPoints, heightmapSystem.findLowPoints());
 }
 
-TEST_F(LoadedTestHeightmapSystem, CalculateRiskLevels) {
+TEST_F(LoadedConstTestHeightmapSystem, CalculateRiskLevels) {
     const std::vector<short> lowPoints{1, 0, 5, 5};
     const std::vector<short> wantRiskLevels{2, 1, 6, 6};
     EXPECT_EQ(wantRiskLevels, heightmapSystem.calculateRiskLevels(lowPoints));
+}
+
+TEST_F(LoadedConstTestHeightmapSystem, InitialInstanceShouldReturnEmptyBasinMap) {
+    EXPECT_EQ(0, heightmapSystem.getBasinMap().size());
+}
+
+TEST_F(LoadedTestHeightmapSystem, TestHighmapShouldGive4Basins) {
+    heightmapSystem.findBasins();
+    EXPECT_EQ(4, heightmapSystem.getBasinMap().size());
 }
 
 int main (int argc, char *argv[]) {
