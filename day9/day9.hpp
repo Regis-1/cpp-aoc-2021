@@ -11,6 +11,8 @@ class HeightmapSystem {
 public:
     const Heightmap& getHeightmap() const;
     const std::vector<short> findLowPointsInLine(const size_t idx) const;
+    const std::vector<short> findLowPoints() const;
+    const std::vector<short> calculateRiskLevels(const std::vector<short> lowPoints) const;
     
     HeightmapSystem() = delete;
     HeightmapSystem(const std::string &filepath);

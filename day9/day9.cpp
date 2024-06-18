@@ -1,9 +1,12 @@
 #include "day9.hpp"
 
+#include <algorithm>
 #include <climits>
 #include <cstdlib>
 #include <fstream>
+#include <functional>
 #include <iostream>
+#include <iterator>
 
 namespace {
 const day9::Heightmap convertFileHeightmapToNumeric(const std::string& fp);
@@ -54,6 +57,28 @@ const std::vector<short> HeightmapSystem::findLowPointsInLine(const size_t idx) 
 
     return lowPoints;
 }
+
+const std::vector<short> HeightmapSystem::findLowPoints() const {
+    std::vector<short> allLowPoints;
+
+    for (auto row{0}; row < hmHeight; ++row) {
+        const auto rowLowPoints{findLowPointsInLine(row)};
+        allLowPoints.insert(std::end(allLowPoints), std::begin(rowLowPoints),
+            std::end(rowLowPoints));
+    }
+
+    return allLowPoints;
+}
+
+const std::vector<short> HeightmapSystem::calculateRiskLevels(const std::vector<short> lowPoints) const {
+    std::vector<short> plusOneVec(lowPoints.size(), 1);
+
+    std::transform(std::begin(lowPoints), std::end(lowPoints),
+        std::begin(plusOneVec), std::begin(plusOneVec), std::plus<short>()); 
+
+    return plusOneVec;
+}
+
 
 const std::pair<size_t, size_t> HeightmapSystem::getHmDimensions() {
     return {heightmap[0].size(), heightmap.size()};

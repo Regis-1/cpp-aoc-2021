@@ -35,6 +35,17 @@ TEST_F(LoadedTestHeightmapSystem, FindingLowPointsInTopLine) {
     EXPECT_EQ(wantLowPoints, heightmapSystem.findLowPointsInLine(0));
 }
 
+TEST_F(LoadedTestHeightmapSystem, FindingAllLowPointsInHeightmap) {
+    const std::vector<short> wantLowPoints{1, 0, 5, 5};
+    EXPECT_EQ(wantLowPoints, heightmapSystem.findLowPoints());
+}
+
+TEST_F(LoadedTestHeightmapSystem, CalculateRiskLevels) {
+    const std::vector<short> lowPoints{1, 0, 5, 5};
+    const std::vector<short> wantRiskLevels{2, 1, 6, 6};
+    EXPECT_EQ(wantRiskLevels, heightmapSystem.calculateRiskLevels(lowPoints));
+}
+
 int main (int argc, char *argv[]) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
