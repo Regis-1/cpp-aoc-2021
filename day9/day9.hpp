@@ -18,6 +18,7 @@ class HeightmapSystem {
 public:
     const Heightmap& getHeightmap() const;
     const BasinMap& getBasinMap() const;
+    const std::vector<size_t> getBasinsSizes() const;
     const std::vector<short> findLowPointsInLine(const size_t idx) const;
     const std::vector<short> findLowPoints() const;
     const std::vector<short> calculateRiskLevels(const std::vector<short> lowPoints) const;
@@ -29,9 +30,11 @@ public:
 
 private:
     const std::pair<size_t, size_t>getHmDimensions();
+    void mapEntireBasin(const std::pair<size_t, size_t> &coords, size_t &basinNumber);
 
     const Heightmap heightmap;
     BasinMap basinMap;
+    size_t basinsCount;
     size_t hmWidth;
     size_t hmHeight;
 };

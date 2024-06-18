@@ -1,4 +1,6 @@
 #include <gtest/gtest.h>
+#include <algorithm>
+#include <ranges>
 
 #include "day9.hpp"
 
@@ -59,9 +61,27 @@ TEST_F(LoadedConstTestHeightmapSystem, InitialInstanceShouldReturnEmptyBasinMap)
     EXPECT_EQ(0, heightmapSystem.getBasinMap().size());
 }
 
+TEST_F(LoadedTestHeightmapSystem, TestHighmapShouldGive35Points) {
+    heightmapSystem.findBasins();
+    EXPECT_EQ(35, heightmapSystem.getBasinMap().size());
+}
+
 TEST_F(LoadedTestHeightmapSystem, TestHighmapShouldGive4Basins) {
     heightmapSystem.findBasins();
-    EXPECT_EQ(4, heightmapSystem.getBasinMap().size());
+    const auto basinsSizes{heightmapSystem.getBasinsSizes()};
+
+    EXPECT_EQ(4, basinsSizes.size());
+    EXPECT_EQ(14, basinsSizes[2]);
+}
+
+TEST_F(LoadedTestHeightmapSystem, Top3LargestBasinSizes) {
+    heightmapSystem.findBasins();
+    auto basinsSizes{heightmapSystem.getBasinsSizes()};
+    std::sort(std::begin(basinsSizes), std::end(basinsSizes), std::greater<size_t>());
+    const auto top3LargestSizes{std::views::all(basinsSizes) | std::views::take(3)};
+
+    EXPECT_EQ(3, top3LargestSizes.size());
+    EXPECT_EQ(14, top3LargestSizes[0]);
 }
 
 int main (int argc, char *argv[]) {
