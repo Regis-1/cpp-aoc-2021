@@ -44,13 +44,29 @@ TEST(OctopusCycle, OneStep) {
 TEST(OctopusCycle, TwoSteps) {
     day11::OctopusGrid initialGrid{testOctopusGrid};
     const day11::OctopusGrid wantAfter2Steps{
-    8,8,0,7,4,7,6,5,5,5, 5,0,8,9,0,8,7,0,5,4, 8,5,9,7,8,8,9,6,0,8,
-    8,4,8,5,7,6,9,6,0,0, 8,7,0,0,9,0,8,8,0,0, 6,6,0,0,0,8,8,9,8,9,
-    6,8,0,0,0,0,5,9,4,3, 0,0,0,0,0,0,7,4,5,6, 9,0,0,0,0,0,0,8,7,6,
-    8,7,0,0,0,0,6,8,4,8,};
+        8,8,0,7,4,7,6,5,5,5, 5,0,8,9,0,8,7,0,5,4, 8,5,9,7,8,8,9,6,0,8,
+        8,4,8,5,7,6,9,6,0,0, 8,7,0,0,9,0,8,8,0,0, 6,6,0,0,0,8,8,9,8,9,
+        6,8,0,0,0,0,5,9,4,3, 0,0,0,0,0,0,7,4,5,6, 9,0,0,0,0,0,0,8,7,6,
+        8,7,0,0,0,0,6,8,4,8,};
 
     day11::runCycle(initialGrid, 2);
     EXPECT_EQ(wantAfter2Steps, initialGrid);
+}
+
+TEST(OctopusCycle, CountingFlashesInWholeRun) {
+    day11::OctopusGrid initialGrid{testOctopusGrid};
+    const size_t wantFlashCount{1656};
+
+    const size_t gotFlashCount{day11::runCycle(initialGrid, 100)};
+    EXPECT_EQ(wantFlashCount, gotFlashCount);
+}
+
+TEST(OctopusCycle, GetStepWithDesiredFlashCount) {
+    day11::OctopusGrid initialGrid{testOctopusGrid};
+    const size_t wantStep{195};
+    const size_t gotStep{day11::runCycleUntilFlashCount(initialGrid, 100)};
+
+    EXPECT_EQ(wantStep, gotStep);
 }
 
 int main (int argc, char *argv[]) {
