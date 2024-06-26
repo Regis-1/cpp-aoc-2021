@@ -5,6 +5,8 @@
 #include <unordered_map>
 
 namespace day12 {
-using CaveMap = std::unordered_map<std::string, std::unique_ptr<Cave>>;
+using CaveMap = std::unordered_map<std::string, std::shared_ptr<Cave>>;
+
 CaveMap extractCaveMapFromFile(const std::string &inputPath);
+const std::vector<Routes> findAllRoutes(CaveMap& map);
 }
