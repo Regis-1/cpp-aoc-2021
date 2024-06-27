@@ -1,6 +1,11 @@
 #include "day12.hpp"
+#include "Caves.hpp"
+#include <algorithm>
 #include <cctype>
 #include <fstream>
+#include <iostream>
+#include <iterator>
+#include <set>
 
 namespace {
 const day12::CaveMap extractCaveMapFromIStream(std::istream &is) {
@@ -14,21 +19,79 @@ const day12::CaveMap extractCaveMapFromIStream(std::istream &is) {
 
         for (auto i{0}; i < nodes.size(); ++i) {
             std::string other{i == 0 ? nodes[1] : nodes[0]};
-            if (auto found{caveMap.find(nodes[i])}; found != caveMap.end())
-                caveMap.at(nodes[i])->addRoute(other);
-            else
+            if (auto found{caveMap.find(nodes[i])}; found != caveMap.end()) {
+                caveMap.at(nodes[i]).routes.push_back(other);
+            }
+            else {
+                CaveType caveType;
                 if (nodes[i]== "start")
-                    caveMap[nodes[i]] = std::make_shared<StartCave>(Routes{other});
+                    caveType = CaveType::Start;
                 else if (nodes[i] == "end")
-                    caveMap[nodes[i]] = std::make_shared<EndCave>();
+                    caveType = CaveType::End;
                 else if (isupper(nodes[i][0]))
-                    caveMap[nodes[i]] = std::make_shared<BigCave>(Routes{other});
+                    caveType = CaveType::Big;
                 else
-                    caveMap[nodes[i]] = std::make_shared<SmallCave>(Routes{other});
+                    caveType = CaveType::Small;
+                caveMap.emplace(nodes[i], Cave{caveType, Routes{other}});
+            }
         }
     }
 
     return caveMap;
+}
+
+void visitCave(std::string &id, day12::CaveMap map, Routes path, std::vector<Routes> &pathList) {
+    auto &currentCave{map.at(id)};
+    if (currentCave.caveType == CaveType::Small)
+            currentCave.visited = true;
+
+    path.push_back(id);
+
+    const auto &possibleRoutes{currentCave.routes};
+    if (possibleRoutes.size() != 0)
+        for (auto r : possibleRoutes) {
+            if (r == "end") {
+                path.push_back("end");
+                pathList.push_back(path);
+                continue;
+            }
+
+            if (not map.at(r).visited)
+                    visitCave(r, map, path, pathList);
+        }
+}
+
+void visitCaveWithTwiceVisit(std::string &id, day12::CaveMap map, Routes path, std::vector<Routes> &pathList, bool markedForTwiceVisit = false) {
+    auto &currentCave{map.at(id)};
+    if (currentCave.caveType == CaveType::Small) {
+        if (not markedForTwiceVisit)
+            currentCave.visited = true;
+    }
+    else if (markedForTwiceVisit) {
+        return;
+    }
+
+    path.push_back(id);
+
+    const auto &possibleRoutes{currentCave.routes};
+    if (possibleRoutes.size() != 0)
+        for (auto r : possibleRoutes) {
+            if (r == "end") {
+                path.push_back("end");
+                pathList.push_back(path);
+                continue;
+            }
+
+            if (not map.at(r).visited) {
+                if (not markedForTwiceVisit) {
+                    visitCaveWithTwiceVisit(r, map, path, pathList, false);
+                    visitCaveWithTwiceVisit(r, map, path, pathList, true);
+                }
+                else {
+                    visitCave(r, map, path, pathList);
+                }
+            }
+        }
 }
 }
 
@@ -44,18 +107,39 @@ CaveMap extractCaveMapFromFile(const std::string &inputPath) {
     return caveMap;
 }
 
-const std::vector<Routes> findAllRoutes(CaveMap &map) {
+const std::vector<Routes> findAllRoutes(CaveMap map) {
     std::vector<Routes> result;
-    // 1. start at "start"
-    std::optional<Routes> startRoutes{map.at("start")->getRoutes()};
-    Routes path{"start"};
-    if (startRoutes.has_value())
-        for (auto r : startRoutes.value()) {
-            //TODO: make this happen baby...
-            //visitCave(r, map, 
-        }
-    // 2. go to others with history
-    // 3. repeat until "end"
+    auto &startCave{map.at("start")};
+    startCave.visited = true;
+    Routes path{"start"}; 
+
+    if (startCave.routes.size() != 0)
+        for (auto r : startCave.routes)
+            if (not map.at(r).visited)
+                visitCave(r, map, path, result);
+
+    return result;
+}
+
+const std::vector<Routes> findAllRoutesWithOneTwiceVisit(CaveMap map) {
+    std::vector<Routes> result;
+    auto &startCave{map.at("start")};
+    startCave.visited = true;
+    Routes path{"start"}; 
+
+    if (startCave.routes.size() != 0)
+        for (auto r : startCave.routes)
+            if (not map.at(r).visited) {
+                visitCaveWithTwiceVisit(r, map, path, result, false);
+                visitCaveWithTwiceVisit(r, map, path, result, true);
+            }
+
+    std::set<Routes> tmpSet;
+    for (auto r : result)
+        tmpSet.emplace(r);
+    result.clear();
+    std::copy(tmpSet.begin(), tmpSet.end(), std::back_inserter(result));
+
     return result;
 }
 }
